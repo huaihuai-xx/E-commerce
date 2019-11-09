@@ -47,7 +47,7 @@
         <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
         <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row.id)">编辑</el-button>
+            <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
             <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog(scope.row)">分配权限</el-button>
           </template>
@@ -151,7 +151,8 @@ export default {
       // 修改用户的对话框
       editDialogVisible:false,
       // 查询到的用户信息对象
-      editForm: {},
+      editFormId: '',
+      editForm:{},
       // 修改表单的验证规则
       editFormRules: {
         roleName: [
@@ -280,9 +281,10 @@ export default {
       this.$refs.addFormRef.resetFields()
     },
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
+    async showEditDialog(row) {
+      this.editFormId = row.id
       // console.log(id)
-      const { data: res } = await this.$http.get('roles/' + id)
+      const { data: res } = await this.$http.get('roles/' + row.id)
       if (res.meta.status !== 200) {
         return this.$message.error('查询用户信息失败！')
       }
@@ -295,11 +297,13 @@ export default {
     },
     // 修改用户信息并提交
     editUserInfo() {
+      // console.log(this.editForm.id)
+      // console.log('ok')
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
         // 发起修改用户信息的数据请求 
         const { data:res } = await this.$http.put('roles/' + 
-        this.editForm.id, {
+        this.editFormId, {
           roleName: this.editForm.roleName,
           roleDesc:this.editForm.roleDesc  
         })
