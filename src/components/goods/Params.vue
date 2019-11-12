@@ -210,7 +210,7 @@ export default {
         return this.$message.error('获取参数失败')
       }
       res.data.forEach(item => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split('') : []
+        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
         // 控制文本框的显示与隐藏
         item.inputVisible = false
         // 文本框中输入的值
